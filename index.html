@@ -40,6 +40,15 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+        /* 增加基礎字體大小 */
+        html {
+            font-size: 18px;
+        }
+        @media (max-width: 768px) {
+            html {
+                font-size: 16px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -604,19 +613,19 @@ AI 使用情況：
                 <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
                     {/* Header */}
                     <header className="bg-slate-800/50 backdrop-blur-lg border-b border-slate-700 sticky top-0 z-50">
-                        <div className="max-w-7xl mx-auto px-4 py-4">
+                        <div className="max-w-7xl mx-auto px-4 py-5">
                             <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl">
-                                        <Icon name="Sparkles" className="w-6 h-6" />
+                                <div className="flex items-center gap-4">
+                                    <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl">
+                                        <Icon name="Sparkles" className="w-7 h-7" />
                                     </div>
                                     <div>
-                                        <h1 className="text-xl font-bold">AI 協作醫學論文寫作指南</h1>
-                                        <p className="text-sm text-slate-400">腫瘤科住院醫師專用 | R3-R5</p>
+                                        <h1 className="text-2xl font-bold">AI 協作醫學論文寫作指南</h1>
+                                        <p className="text-base text-slate-400">腫瘤科住院醫師專用 | R3-R5</p>
                                     </div>
                                 </div>
-                                <div className="hidden md:flex items-center gap-2 text-sm text-slate-400">
-                                    <Icon name="Zap" className="w-4 h-4 text-amber-400" />
+                                <div className="hidden md:flex items-center gap-2 text-base text-slate-400">
+                                    <Icon name="Zap" className="w-5 h-5 text-amber-400" />
                                     <span>2024-2025 最新指引</span>
                                 </div>
                             </div>
@@ -626,12 +635,12 @@ AI 使用情況：
                     {/* Navigation */}
                     <nav className="bg-slate-800/30 border-b border-slate-700">
                         <div className="max-w-7xl mx-auto px-4">
-                            <div className="flex gap-1 overflow-x-auto py-2">
+                            <div className="flex gap-2 overflow-x-auto py-3">
                                 {sections.map(section => (
                                     <button
                                         key={section.id}
                                         onClick={() => setActiveSection(section.id)}
-                                        className={`flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap transition-all ${
+                                        className={`flex items-center gap-2 px-5 py-3 rounded-lg whitespace-nowrap transition-all text-base ${
                                             activeSection === section.id 
                                                 ? 'bg-blue-600 text-white' 
                                                 : 'text-slate-400 hover:bg-slate-700 hover:text-white'
@@ -652,26 +661,54 @@ AI 使用情況：
                                 {/* Hero Stats */}
                                 <div className="grid md:grid-cols-3 gap-6">
                                     <div className="bg-gradient-to-br from-blue-600/20 to-blue-800/20 border border-blue-500/30 rounded-2xl p-6">
-                                        <div className="text-4xl font-bold text-blue-400">13.5%</div>
-                                        <div className="text-slate-300 mt-2">生物醫學摘要已使用 LLM 協助撰寫</div>
-                                        <div className="text-sm text-slate-500 mt-1">2024年 PubMed 分析</div>
+                                        <div className="text-5xl font-bold text-blue-400">13.5%</div>
+                                        <div className="text-slate-300 mt-2 text-lg">生物醫學摘要已使用 LLM 協助撰寫</div>
+                                        <div className="text-base text-slate-500 mt-1">2024年 PubMed 分析</div>
                                     </div>
                                     <div className="bg-gradient-to-br from-amber-600/20 to-amber-800/20 border border-amber-500/30 rounded-2xl p-6">
-                                        <div className="text-4xl font-bold text-amber-400">9%</div>
-                                        <div className="text-slate-300 mt-2">投稿者主動揭露 AI 使用</div>
-                                        <div className="text-sm text-slate-500 mt-1">AACR 2025 研究</div>
+                                        <div className="text-5xl font-bold text-amber-400">9%</div>
+                                        <div className="text-slate-300 mt-2 text-lg">投稿者主動揭露 AI 使用</div>
+                                        <div className="text-base text-slate-500 mt-1">AACR 2025 研究</div>
                                     </div>
                                     <div className="bg-gradient-to-br from-rose-600/20 to-rose-800/20 border border-rose-500/30 rounded-2xl p-6">
-                                        <div className="text-4xl font-bold text-rose-400">18-55%</div>
-                                        <div className="text-slate-300 mt-2">AI 生成引用的虛構率</div>
-                                        <div className="text-sm text-slate-500 mt-1">依模型版本而異</div>
+                                        <div className="text-5xl font-bold text-rose-400">18-55%</div>
+                                        <div className="text-slate-300 mt-2 text-lg">AI 生成引用的虛構率</div>
+                                        <div className="text-base text-slate-500 mt-1">依模型版本而異</div>
+                                    </div>
+                                </div>
+
+                                {/* EQUATOR Network Resource Card */}
+                                <div className="bg-gradient-to-br from-emerald-600/20 to-teal-800/20 border border-emerald-500/30 rounded-2xl p-6">
+                                    <div className="flex items-start gap-4">
+                                        <div className="p-3 bg-emerald-600/30 rounded-xl flex-shrink-0">
+                                            <Icon name="ExternalLink" className="w-8 h-8 text-emerald-400" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <h3 className="text-xl font-bold text-emerald-400 mb-2">📋 Reporting Guidelines 資源</h3>
+                                            <p className="text-lg text-slate-300 mb-4">
+                                                EQUATOR Network 提供完整的研究報告指引資料庫，包含 STROBE、CONSORT、CARE 等超過 500 種報告指引。
+                                            </p>
+                                            <a 
+                                                href="https://www.equator-network.org/" 
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-500 rounded-xl text-white font-semibold text-lg transition-colors"
+                                            >
+                                                <Icon name="Globe" className="w-5 h-5" />
+                                                前往 EQUATOR Network
+                                                <Icon name="ArrowRight" className="w-5 h-5" />
+                                            </a>
+                                            <p className="text-base text-slate-400 mt-3">
+                                                https://www.equator-network.org/
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
 
                                 {/* Workflow */}
                                 <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
                                     <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
-                                        <Icon name="Zap" className="w-5 h-5 text-amber-400" />
+                                        <Icon name="Zap" className="w-6 h-6 text-amber-400" />
                                         AI 協作論文寫作流程
                                     </h2>
                                     <div className="grid md:grid-cols-5 gap-4">
@@ -684,15 +721,15 @@ AI 使用情況：
                                         ].map((item, idx) => (
                                             <div key={idx} className="relative">
                                                 <div className="bg-slate-700/50 rounded-xl p-4 h-full">
-                                                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-sm font-bold mb-3">
+                                                    <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-lg font-bold mb-3">
                                                         {item.step}
                                                     </div>
-                                                    <h3 className="font-semibold mb-1">{item.title}</h3>
-                                                    <div className="text-sm text-blue-400 mb-2">{item.tool}</div>
-                                                    <p className="text-sm text-slate-400">{item.desc}</p>
+                                                    <h3 className="font-semibold mb-1 text-lg">{item.title}</h3>
+                                                    <div className="text-base text-blue-400 mb-2">{item.tool}</div>
+                                                    <p className="text-base text-slate-400">{item.desc}</p>
                                                 </div>
                                                 {idx < 4 && (
-                                                    <div className="hidden md:block absolute top-1/2 -right-2 transform -translate-y-1/2 text-slate-600">
+                                                    <div className="hidden md:block absolute top-1/2 -right-2 transform -translate-y-1/2 text-slate-600 text-xl">
                                                         →
                                                     </div>
                                                 )}
@@ -704,11 +741,11 @@ AI 使用情況：
                                 {/* Quick Guidelines */}
                                 <div className="grid md:grid-cols-2 gap-6">
                                     <div className="bg-emerald-900/20 border border-emerald-500/30 rounded-2xl p-6">
-                                        <h3 className="text-lg font-semibold text-emerald-400 mb-4 flex items-center gap-2">
-                                            <Icon name="CheckCircle" className="w-5 h-5" />
+                                        <h3 className="text-xl font-semibold text-emerald-400 mb-4 flex items-center gap-2">
+                                            <Icon name="CheckCircle" className="w-6 h-6" />
                                             適合 AI 協助的任務
                                         </h3>
-                                        <ul className="space-y-2 text-slate-300">
+                                        <ul className="space-y-3 text-slate-300 text-lg">
                                             <li className="flex items-start gap-2">
                                                 <span className="text-emerald-400 mt-1">✓</span>
                                                 文獻摘要與綜整
@@ -732,11 +769,11 @@ AI 使用情況：
                                         </ul>
                                     </div>
                                     <div className="bg-rose-900/20 border border-rose-500/30 rounded-2xl p-6">
-                                        <h3 className="text-lg font-semibold text-rose-400 mb-4 flex items-center gap-2">
-                                            <Icon name="AlertTriangle" className="w-5 h-5" />
+                                        <h3 className="text-xl font-semibold text-rose-400 mb-4 flex items-center gap-2">
+                                            <Icon name="AlertTriangle" className="w-6 h-6" />
                                             需謹慎或避免的任務
                                         </h3>
-                                        <ul className="space-y-2 text-slate-300">
+                                        <ul className="space-y-3 text-slate-300 text-lg">
                                             <li className="flex items-start gap-2">
                                                 <span className="text-rose-400 mt-1">✗</span>
                                                 讓 AI 生成參考文獻（高虛構率）
@@ -772,13 +809,13 @@ AI 使用情況：
                                         <button
                                             key={key}
                                             onClick={() => setActiveTool(key)}
-                                            className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${
+                                            className={`flex items-center gap-2 px-6 py-4 rounded-xl transition-all text-lg ${
                                                 activeTool === key
                                                     ? `bg-gradient-to-r ${tool.color} text-white shadow-lg`
                                                     : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
                                             }`}
                                         >
-                                            <span className="text-xl">{tool.icon}</span>
+                                            <span className="text-2xl">{tool.icon}</span>
                                             {tool.name}
                                         </button>
                                     ))}
@@ -787,51 +824,51 @@ AI 使用情況：
                                 {/* Tool Detail */}
                                 <div className={`bg-gradient-to-br ${tools[activeTool].color} rounded-2xl p-1`}>
                                     <div className="bg-slate-900 rounded-xl p-6">
-                                        <div className="flex items-center gap-3 mb-6">
-                                            <span className="text-4xl">{tools[activeTool].icon}</span>
+                                        <div className="flex items-center gap-4 mb-6">
+                                            <span className="text-5xl">{tools[activeTool].icon}</span>
                                             <div>
-                                                <h2 className="text-2xl font-bold">{tools[activeTool].name}</h2>
-                                                <p className="text-slate-400">醫學論文寫作應用定位</p>
+                                                <h2 className="text-3xl font-bold">{tools[activeTool].name}</h2>
+                                                <p className="text-lg text-slate-400">醫學論文寫作應用定位</p>
                                             </div>
                                         </div>
 
                                         <div className="grid md:grid-cols-3 gap-6">
-                                            <div className="bg-slate-800/50 rounded-xl p-4">
-                                                <h3 className="font-semibold text-emerald-400 mb-3 flex items-center gap-2">
-                                                    <Icon name="CheckCircle" className="w-4 h-4" />
+                                            <div className="bg-slate-800/50 rounded-xl p-5">
+                                                <h3 className="font-semibold text-emerald-400 mb-4 flex items-center gap-2 text-lg">
+                                                    <Icon name="CheckCircle" className="w-5 h-5" />
                                                     優勢
                                                 </h3>
-                                                <ul className="space-y-2">
+                                                <ul className="space-y-3">
                                                     {tools[activeTool].strengths.map((s, i) => (
-                                                        <li key={i} className="text-slate-300 text-sm flex items-start gap-2">
+                                                        <li key={i} className="text-slate-300 text-base flex items-start gap-2">
                                                             <span className="text-emerald-400 mt-1">•</span>
                                                             {s}
                                                         </li>
                                                     ))}
                                                 </ul>
                                             </div>
-                                            <div className="bg-slate-800/50 rounded-xl p-4">
-                                                <h3 className="font-semibold text-amber-400 mb-3 flex items-center gap-2">
-                                                    <Icon name="AlertTriangle" className="w-4 h-4" />
+                                            <div className="bg-slate-800/50 rounded-xl p-5">
+                                                <h3 className="font-semibold text-amber-400 mb-4 flex items-center gap-2 text-lg">
+                                                    <Icon name="AlertTriangle" className="w-5 h-5" />
                                                     限制
                                                 </h3>
-                                                <ul className="space-y-2">
+                                                <ul className="space-y-3">
                                                     {tools[activeTool].limitations.map((l, i) => (
-                                                        <li key={i} className="text-slate-300 text-sm flex items-start gap-2">
+                                                        <li key={i} className="text-slate-300 text-base flex items-start gap-2">
                                                             <span className="text-amber-400 mt-1">•</span>
                                                             {l}
                                                         </li>
                                                     ))}
                                                 </ul>
                                             </div>
-                                            <div className="bg-slate-800/50 rounded-xl p-4">
-                                                <h3 className="font-semibold text-blue-400 mb-3 flex items-center gap-2">
-                                                    <Icon name="Zap" className="w-4 h-4" />
+                                            <div className="bg-slate-800/50 rounded-xl p-5">
+                                                <h3 className="font-semibold text-blue-400 mb-4 flex items-center gap-2 text-lg">
+                                                    <Icon name="Zap" className="w-5 h-5" />
                                                     最佳用途
                                                 </h3>
-                                                <ul className="space-y-2">
+                                                <ul className="space-y-3">
                                                     {tools[activeTool].bestFor.map((b, i) => (
-                                                        <li key={i} className="text-slate-300 text-sm flex items-start gap-2">
+                                                        <li key={i} className="text-slate-300 text-base flex items-start gap-2">
                                                             <span className="text-blue-400 mt-1">•</span>
                                                             {b}
                                                         </li>
@@ -844,47 +881,47 @@ AI 使用情況：
 
                                 {/* Decision Table */}
                                 <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
-                                    <h3 className="text-lg font-semibold mb-4">🎯 任務 → 工具選擇快速指南</h3>
+                                    <h3 className="text-xl font-semibold mb-4">🎯 任務 → 工具選擇快速指南</h3>
                                     <div className="overflow-x-auto">
-                                        <table className="w-full text-sm">
+                                        <table className="w-full text-base">
                                             <thead>
                                                 <tr className="border-b border-slate-700">
-                                                    <th className="text-left py-3 px-4 text-slate-400">任務</th>
-                                                    <th className="text-left py-3 px-4 text-slate-400">首選工具</th>
-                                                    <th className="text-left py-3 px-4 text-slate-400">次選工具</th>
-                                                    <th className="text-left py-3 px-4 text-slate-400">注意事項</th>
+                                                    <th className="text-left py-4 px-4 text-slate-400">任務</th>
+                                                    <th className="text-left py-4 px-4 text-slate-400">首選工具</th>
+                                                    <th className="text-left py-4 px-4 text-slate-400">次選工具</th>
+                                                    <th className="text-left py-4 px-4 text-slate-400">注意事項</th>
                                                 </tr>
                                             </thead>
                                             <tbody className="divide-y divide-slate-700/50">
                                                 <tr>
-                                                    <td className="py-3 px-4">文獻綜整</td>
-                                                    <td className="py-3 px-4 text-amber-400">📚 NotebookLM</td>
-                                                    <td className="py-3 px-4 text-purple-400">🧠 Claude</td>
-                                                    <td className="py-3 px-4 text-slate-400">幻覺風險最低</td>
+                                                    <td className="py-4 px-4">文獻綜整</td>
+                                                    <td className="py-4 px-4 text-amber-400">📚 NotebookLM</td>
+                                                    <td className="py-4 px-4 text-purple-400">🧠 Claude</td>
+                                                    <td className="py-4 px-4 text-slate-400">幻覺風險最低</td>
                                                 </tr>
                                                 <tr>
-                                                    <td className="py-3 px-4">初稿撰寫</td>
-                                                    <td className="py-3 px-4 text-emerald-400">🤖 ChatGPT-4</td>
-                                                    <td className="py-3 px-4 text-purple-400">🧠 Claude</td>
-                                                    <td className="py-3 px-4 text-slate-400">需大幅人工改寫</td>
+                                                    <td className="py-4 px-4">初稿撰寫</td>
+                                                    <td className="py-4 px-4 text-emerald-400">🤖 ChatGPT-4</td>
+                                                    <td className="py-4 px-4 text-purple-400">🧠 Claude</td>
+                                                    <td className="py-4 px-4 text-slate-400">需大幅人工改寫</td>
                                                 </tr>
                                                 <tr>
-                                                    <td className="py-3 px-4">語言潤飾</td>
-                                                    <td className="py-3 px-4 text-purple-400">🧠 Claude</td>
-                                                    <td className="py-3 px-4 text-emerald-400">🤖 ChatGPT-4</td>
-                                                    <td className="py-3 px-4 text-slate-400">完整性評分最高</td>
+                                                    <td className="py-4 px-4">語言潤飾</td>
+                                                    <td className="py-4 px-4 text-purple-400">🧠 Claude</td>
+                                                    <td className="py-4 px-4 text-emerald-400">🤖 ChatGPT-4</td>
+                                                    <td className="py-4 px-4 text-slate-400">完整性評分最高</td>
                                                 </tr>
                                                 <tr>
-                                                    <td className="py-3 px-4">引用查找</td>
-                                                    <td className="py-3 px-4 text-rose-400 font-semibold">⚠️ 禁止使用 AI</td>
-                                                    <td className="py-3 px-4">-</td>
-                                                    <td className="py-3 px-4 text-slate-400">使用 PubMed/Scholar</td>
+                                                    <td className="py-4 px-4">引用查找</td>
+                                                    <td className="py-4 px-4 text-rose-400 font-semibold">⚠️ 禁止使用 AI</td>
+                                                    <td className="py-4 px-4">-</td>
+                                                    <td className="py-4 px-4 text-slate-400">使用 PubMed/Scholar</td>
                                                 </tr>
                                                 <tr>
-                                                    <td className="py-3 px-4">即時資訊</td>
-                                                    <td className="py-3 px-4 text-cyan-400">✨ Gemini</td>
-                                                    <td className="py-3 px-4">-</td>
-                                                    <td className="py-3 px-4 text-slate-400">可存取即時網路</td>
+                                                    <td className="py-4 px-4">即時資訊</td>
+                                                    <td className="py-4 px-4 text-cyan-400">✨ Gemini</td>
+                                                    <td className="py-4 px-4">-</td>
+                                                    <td className="py-4 px-4 text-slate-400">可存取即時網路</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -902,7 +939,7 @@ AI 使用情況：
                                         <button
                                             key={key}
                                             onClick={() => setActivePromptCategory(key)}
-                                            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                                            className={`flex items-center gap-2 px-5 py-3 rounded-lg transition-all text-base ${
                                                 activePromptCategory === key
                                                     ? 'bg-blue-600 text-white'
                                                     : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
@@ -923,36 +960,36 @@ AI 使用情況：
                                         >
                                             <button
                                                 onClick={() => toggleCard(prompt.id)}
-                                                className="w-full p-4 flex items-center justify-between hover:bg-slate-700/30 transition-colors"
+                                                className="w-full p-5 flex items-center justify-between hover:bg-slate-700/30 transition-colors"
                                             >
                                                 <div className="text-left">
-                                                    <h3 className="font-semibold text-lg">{prompt.title}</h3>
-                                                    <p className="text-sm text-slate-400 mt-1">{prompt.scenario}</p>
+                                                    <h3 className="font-semibold text-xl">{prompt.title}</h3>
+                                                    <p className="text-base text-slate-400 mt-1">{prompt.scenario}</p>
                                                 </div>
                                                 <Icon 
                                                     name={expandedCards[prompt.id] ? 'ChevronUp' : 'ChevronDown'} 
-                                                    className="w-5 h-5 text-slate-400" 
+                                                    className="w-6 h-6 text-slate-400" 
                                                 />
                                             </button>
                                             
                                             {expandedCards[prompt.id] && (
-                                                <div className="px-4 pb-4 space-y-4">
+                                                <div className="px-5 pb-5 space-y-4">
                                                     <div className="relative">
-                                                        <pre className="bg-slate-900 rounded-lg p-4 text-sm text-slate-300 whitespace-pre-wrap overflow-x-auto">
+                                                        <pre className="bg-slate-900 rounded-lg p-5 text-base text-slate-300 whitespace-pre-wrap overflow-x-auto">
                                                             {prompt.prompt}
                                                         </pre>
                                                         <button
                                                             onClick={() => copyToClipboard(prompt.prompt, prompt.id)}
-                                                            className="absolute top-2 right-2 p-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
+                                                            className="absolute top-3 right-3 p-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
                                                         >
                                                             <Icon 
                                                                 name={copiedPrompt === prompt.id ? 'Check' : 'Copy'} 
-                                                                className={`w-4 h-4 ${copiedPrompt === prompt.id ? 'text-emerald-400' : ''}`} 
+                                                                className={`w-5 h-5 ${copiedPrompt === prompt.id ? 'text-emerald-400' : ''}`} 
                                                             />
                                                         </button>
                                                     </div>
-                                                    <div className="flex items-start gap-2 text-sm bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
-                                                        <Icon name="Sparkles" className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+                                                    <div className="flex items-start gap-3 text-base bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                                                        <Icon name="Sparkles" className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
                                                         <span className="text-blue-200"><strong>小提示：</strong>{prompt.tips}</span>
                                                     </div>
                                                 </div>
@@ -969,28 +1006,28 @@ AI 使用情況：
                                 {/* Core Principles */}
                                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                                     {ethicsGuidelines.map((item, idx) => (
-                                        <div key={idx} className="bg-slate-800/50 rounded-xl p-5 border border-slate-700">
-                                            <div className="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center text-blue-400 mb-4">
-                                                <Icon name={item.icon} className="w-6 h-6" />
+                                        <div key={idx} className="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                                            <div className="w-14 h-14 bg-blue-600/20 rounded-xl flex items-center justify-center text-blue-400 mb-4">
+                                                <Icon name={item.icon} className="w-7 h-7" />
                                             </div>
-                                            <h3 className="font-semibold mb-2">{item.title}</h3>
-                                            <p className="text-sm text-slate-400">{item.desc}</p>
+                                            <h3 className="font-semibold mb-2 text-lg">{item.title}</h3>
+                                            <p className="text-base text-slate-400">{item.desc}</p>
                                         </div>
                                     ))}
                                 </div>
 
                                 {/* Journal Policies */}
                                 <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
-                                    <h3 className="text-lg font-semibold mb-4">📋 主要期刊 AI 政策比較</h3>
+                                    <h3 className="text-xl font-semibold mb-4">📋 主要期刊 AI 政策比較</h3>
                                     <div className="overflow-x-auto">
-                                        <table className="w-full text-sm">
+                                        <table className="w-full text-base">
                                             <thead>
                                                 <tr className="border-b border-slate-700">
-                                                    <th className="text-left py-3 px-4 text-slate-400">期刊</th>
-                                                    <th className="text-center py-3 px-4 text-slate-400">AI 作者</th>
-                                                    <th className="text-center py-3 px-4 text-slate-400">需揭露</th>
-                                                    <th className="text-center py-3 px-4 text-slate-400">AI 圖像</th>
-                                                    <th className="text-center py-3 px-4 text-slate-400">同儕審查</th>
+                                                    <th className="text-left py-4 px-4 text-slate-400">期刊</th>
+                                                    <th className="text-center py-4 px-4 text-slate-400">AI 作者</th>
+                                                    <th className="text-center py-4 px-4 text-slate-400">需揭露</th>
+                                                    <th className="text-center py-4 px-4 text-slate-400">AI 圖像</th>
+                                                    <th className="text-center py-4 px-4 text-slate-400">同儕審查</th>
                                                 </tr>
                                             </thead>
                                             <tbody className="divide-y divide-slate-700/50">
@@ -1002,11 +1039,11 @@ AI 使用情況：
                                                     { name: 'JCO', author: '禁止', disclose: '是', image: '依 ICMJE', review: '禁止' },
                                                 ].map((journal, idx) => (
                                                     <tr key={idx}>
-                                                        <td className="py-3 px-4 font-medium">{journal.name}</td>
-                                                        <td className="py-3 px-4 text-center text-rose-400">{journal.author}</td>
-                                                        <td className="py-3 px-4 text-center text-emerald-400">{journal.disclose}</td>
-                                                        <td className="py-3 px-4 text-center text-amber-400">{journal.image}</td>
-                                                        <td className="py-3 px-4 text-center text-rose-400">{journal.review}</td>
+                                                        <td className="py-4 px-4 font-medium">{journal.name}</td>
+                                                        <td className="py-4 px-4 text-center text-rose-400">{journal.author}</td>
+                                                        <td className="py-4 px-4 text-center text-emerald-400">{journal.disclose}</td>
+                                                        <td className="py-4 px-4 text-center text-amber-400">{journal.image}</td>
+                                                        <td className="py-4 px-4 text-center text-rose-400">{journal.review}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -1016,39 +1053,39 @@ AI 使用情況：
 
                                 {/* Disclosure Template */}
                                 <div className="bg-gradient-to-br from-blue-900/30 to-purple-900/30 rounded-2xl p-6 border border-blue-500/30">
-                                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                                        <Icon name="FileText" className="w-5 h-5 text-blue-400" />
+                                    <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                                        <Icon name="FileText" className="w-6 h-6 text-blue-400" />
                                         AI 使用揭露聲明範本
                                     </h3>
-                                    <div className="relative bg-slate-900/50 rounded-lg p-4">
-                                        <p className="text-slate-300 text-sm leading-relaxed">
+                                    <div className="relative bg-slate-900/50 rounded-lg p-5">
+                                        <p className="text-slate-300 text-base leading-relaxed">
                                             "The authors used <span className="text-blue-400">[tool name, version]</span> to assist with <span className="text-blue-400">[specific tasks, e.g., language editing, grammar checking]</span>. All AI-generated content was reviewed and verified by the authors, who take full responsibility for the accuracy of the final manuscript."
                                         </p>
                                         <button
                                             onClick={() => copyToClipboard('The authors used [tool name, version] to assist with [specific tasks, e.g., language editing, grammar checking]. All AI-generated content was reviewed and verified by the authors, who take full responsibility for the accuracy of the final manuscript.', 'disclosure')}
-                                            className="absolute top-2 right-2 p-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
+                                            className="absolute top-3 right-3 p-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
                                         >
                                             <Icon 
                                                 name={copiedPrompt === 'disclosure' ? 'Check' : 'Copy'} 
-                                                className={`w-4 h-4 ${copiedPrompt === 'disclosure' ? 'text-emerald-400' : ''}`} 
+                                                className={`w-5 h-5 ${copiedPrompt === 'disclosure' ? 'text-emerald-400' : ''}`} 
                                             />
                                         </button>
                                     </div>
-                                    <p className="text-sm text-slate-500 mt-3">
+                                    <p className="text-base text-slate-500 mt-3">
                                         * 揭露位置：寫作協助 → 致謝；資料分析/圖表產生 → 方法
                                     </p>
                                 </div>
 
                                 {/* Verification Checklist */}
                                 <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
-                                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                                        <Icon name="CheckCircle" className="w-5 h-5 text-emerald-400" />
+                                    <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                                        <Icon name="CheckCircle" className="w-6 h-6 text-emerald-400" />
                                         AI 生成內容驗證檢查表
                                     </h3>
                                     <div className="grid md:grid-cols-2 gap-6">
                                         <div>
-                                            <h4 className="font-medium text-amber-400 mb-3">引用驗證（必做）</h4>
-                                            <ul className="space-y-2 text-sm text-slate-300">
+                                            <h4 className="font-medium text-amber-400 mb-4 text-lg">引用驗證（必做）</h4>
+                                            <ul className="space-y-3 text-base text-slate-300">
                                                 <li className="flex items-start gap-2">
                                                     <span className="text-slate-500">□</span>
                                                     Google Scholar 以引號搜尋完整標題
@@ -1072,8 +1109,8 @@ AI 使用情況：
                                             </ul>
                                         </div>
                                         <div>
-                                            <h4 className="font-medium text-amber-400 mb-3">內容驗證</h4>
-                                            <ul className="space-y-2 text-sm text-slate-300">
+                                            <h4 className="font-medium text-amber-400 mb-4 text-lg">內容驗證</h4>
+                                            <ul className="space-y-3 text-base text-slate-300">
                                                 <li className="flex items-start gap-2">
                                                     <span className="text-slate-500">□</span>
                                                     對照原始來源查核統計數據
@@ -1105,12 +1142,15 @@ AI 使用情況：
                     {/* Footer */}
                     <footer className="bg-slate-800/30 border-t border-slate-700 mt-12">
                         <div className="max-w-7xl mx-auto px-4 py-6">
-                            <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-500">
-                                <div>
-                                    參考指引：ICMJE 2024 | COPE 2024 | STROBE | CONSORT 2025 | CARE
+                            <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-base text-slate-500">
+                                <div className="flex items-center gap-2">
+                                    參考指引：
+                                    <a href="https://www.equator-network.org/" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">EQUATOR Network</a>
+                                    <span>|</span>
+                                    ICMJE 2024 | COPE 2024 | STROBE | CONSORT 2025 | CARE
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Icon name="AlertTriangle" className="w-4 h-4 text-amber-500" />
+                                    <Icon name="AlertTriangle" className="w-5 h-5 text-amber-500" />
                                     所有 AI 生成內容需人工驗證，作者負全部責任
                                 </div>
                             </div>
