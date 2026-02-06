@@ -1,68 +1,130 @@
-import React, { useState } from 'react';
-import { BookOpen, FileText, Edit3, CheckCircle, AlertTriangle, Copy, Check, ChevronDown, ChevronUp, Sparkles, PenTool, Search, BarChart3, MessageSquare, Shield, Zap, Users, Brain, Clipboard } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 協作醫學論文寫作指南 | 腫瘤科住院醫師專用</title>
+    <meta name="description" content="專為腫瘤科住院醫師設計的AI協作醫學論文寫作指南，涵蓋ChatGPT、Claude、Gemini、NotebookLM應用與Prompt範例">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #475569 #1e293b;
+        }
+        *::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        *::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        *::-webkit-scrollbar-thumb {
+            background-color: #475569;
+            border-radius: 4px;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect } = React;
 
-const MedicalWritingAIGuide = () => {
-  const [activeSection, setActiveSection] = useState('overview');
-  const [activeTool, setActiveTool] = useState('chatgpt');
-  const [activePromptCategory, setActivePromptCategory] = useState('literature');
-  const [copiedPrompt, setCopiedPrompt] = useState(null);
-  const [expandedCards, setExpandedCards] = useState({});
+        // Icon Components
+        const Icon = ({ name, className = "w-5 h-5" }) => {
+            const iconRef = React.useRef(null);
+            
+            useEffect(() => {
+                if (iconRef.current && lucide && lucide[name]) {
+                    iconRef.current.innerHTML = '';
+                    const iconElement = lucide.createElement(lucide[name]);
+                    iconRef.current.appendChild(iconElement);
+                }
+            }, [name]);
+            
+            return <span ref={iconRef} className={`inline-flex items-center justify-center ${className}`}></span>;
+        };
 
-  const copyToClipboard = (text, id) => {
-    navigator.clipboard.writeText(text);
-    setCopiedPrompt(id);
-    setTimeout(() => setCopiedPrompt(null), 2000);
-  };
+        const MedicalWritingAIGuide = () => {
+            const [activeSection, setActiveSection] = useState('overview');
+            const [activeTool, setActiveTool] = useState('chatgpt');
+            const [activePromptCategory, setActivePromptCategory] = useState('literature');
+            const [copiedPrompt, setCopiedPrompt] = useState(null);
+            const [expandedCards, setExpandedCards] = useState({});
 
-  const toggleCard = (id) => {
-    setExpandedCards(prev => ({ ...prev, [id]: !prev[id] }));
-  };
+            const copyToClipboard = (text, id) => {
+                navigator.clipboard.writeText(text);
+                setCopiedPrompt(id);
+                setTimeout(() => setCopiedPrompt(null), 2000);
+            };
 
-  const tools = {
-    chatgpt: {
-      name: 'ChatGPT',
-      icon: '🤖',
-      color: 'from-emerald-500 to-teal-600',
-      strengths: ['初稿生成效率高', '統計結果描述準確', '多語言支援佳'],
-      limitations: ['引用虛構率 18-20%', '需大幅人工改寫'],
-      bestFor: ['初稿撰寫', '方法部分', '表格準備', 'Cover Letter']
-    },
-    claude: {
-      name: 'Claude',
-      icon: '🧠',
-      color: 'from-violet-500 to-purple-600',
-      strengths: ['回應完整性最高', '複雜推理能力強', '細膩討論佳'],
-      limitations: ['即時資訊有限', '需搭配其他工具驗證'],
-      bestFor: ['詳細稿件撰寫', '複雜案例分析', '語言潤飾', '倫理討論']
-    },
-    gemini: {
-      name: 'Gemini',
-      icon: '✨',
-      color: 'from-blue-500 to-cyan-600',
-      strengths: ['即時網路搜尋', '多模態分析', 'Google整合'],
-      limitations: ['表現不一致', '曾出現嚴重虛構'],
-      bestFor: ['即時文獻檢索', '資料視覺化建議', '交叉參照']
-    },
-    notebooklm: {
-      name: 'NotebookLM',
-      icon: '📚',
-      color: 'from-amber-500 to-orange-600',
-      strengths: ['幻覺風險最低', '深度引用追蹤', '隱私保護佳'],
-      limitations: ['僅根據上傳來源', '無法存取外部資料庫'],
-      bestFor: ['文獻回顧綜整', '研究缺口識別', '結構化摘要']
-    }
-  };
+            const toggleCard = (id) => {
+                setExpandedCards(prev => ({ ...prev, [id]: !prev[id] }));
+            };
 
-  const promptCategories = {
-    literature: {
-      name: '文獻整理',
-      icon: <Search className="w-5 h-5" />,
-      prompts: [
-        {
-          id: 'lit1',
-          title: '文獻摘要',
-          scenario: '快速摘要一篇研究論文的關鍵發現',
-          prompt: `以醫學研究者身分，摘要以下關於[主題]研究的關鍵發現。包含：
+            const tools = {
+                chatgpt: {
+                    name: 'ChatGPT',
+                    icon: '🤖',
+                    color: 'from-emerald-500 to-teal-600',
+                    strengths: ['初稿生成效率高', '統計結果描述準確', '多語言支援佳'],
+                    limitations: ['引用虛構率 18-20%', '需大幅人工改寫'],
+                    bestFor: ['初稿撰寫', '方法部分', '表格準備', 'Cover Letter']
+                },
+                claude: {
+                    name: 'Claude',
+                    icon: '🧠',
+                    color: 'from-violet-500 to-purple-600',
+                    strengths: ['回應完整性最高', '複雜推理能力強', '細膩討論佳'],
+                    limitations: ['即時資訊有限', '需搭配其他工具驗證'],
+                    bestFor: ['詳細稿件撰寫', '複雜案例分析', '語言潤飾', '倫理討論']
+                },
+                gemini: {
+                    name: 'Gemini',
+                    icon: '✨',
+                    color: 'from-blue-500 to-cyan-600',
+                    strengths: ['即時網路搜尋', '多模態分析', 'Google整合'],
+                    limitations: ['表現不一致', '曾出現嚴重虛構'],
+                    bestFor: ['即時文獻檢索', '資料視覺化建議', '交叉參照']
+                },
+                notebooklm: {
+                    name: 'NotebookLM',
+                    icon: '📚',
+                    color: 'from-amber-500 to-orange-600',
+                    strengths: ['幻覺風險最低', '深度引用追蹤', '隱私保護佳'],
+                    limitations: ['僅根據上傳來源', '無法存取外部資料庫'],
+                    bestFor: ['文獻回顧綜整', '研究缺口識別', '結構化摘要']
+                }
+            };
+
+            const promptCategories = {
+                literature: {
+                    name: '文獻整理',
+                    icon: 'Search',
+                    prompts: [
+                        {
+                            id: 'lit1',
+                            title: '文獻摘要',
+                            scenario: '快速摘要一篇研究論文的關鍵發現',
+                            prompt: `以醫學研究者身分，摘要以下關於[主題]研究的關鍵發現。包含：
 • 主要目標
 • 研究方法
 • 主要結果
@@ -70,13 +132,13 @@ const MedicalWritingAIGuide = () => {
 
 限制250字。以下是研究內容：
 [貼上摘要或關鍵段落]`,
-          tips: '建議使用 NotebookLM 上傳多篇文獻一起分析'
-        },
-        {
-          id: 'lit2',
-          title: '研究缺口識別',
-          scenario: '從多篇文獻中找出研究機會',
-          prompt: `根據以下關於[主題]的研究摘要，識別潛在研究缺口並建議未來研究方向。
+                            tips: '建議使用 NotebookLM 上傳多篇文獻一起分析'
+                        },
+                        {
+                            id: 'lit2',
+                            title: '研究缺口識別',
+                            scenario: '從多篇文獻中找出研究機會',
+                            prompt: `根據以下關於[主題]的研究摘要，識別潛在研究缺口並建議未來研究方向。
 
 以以下結構回應：
 1) 現有知識摘要（3-5個重點）
@@ -85,13 +147,13 @@ const MedicalWritingAIGuide = () => {
 
 研究摘要：
 [貼上多篇研究摘要]`,
-          tips: '這是論文 Introduction 的重要基礎'
-        },
-        {
-          id: 'lit3',
-          title: '文獻比較表',
-          scenario: '整理多篇研究的方法學差異',
-          prompt: `比較以下[數量]篇關於[主題]的研究，製作比較表格。
+                            tips: '這是論文 Introduction 的重要基礎'
+                        },
+                        {
+                            id: 'lit3',
+                            title: '文獻比較表',
+                            scenario: '整理多篇研究的方法學差異',
+                            prompt: `比較以下[數量]篇關於[主題]的研究，製作比較表格。
 
 欄位包含：
 • 作者/年份
@@ -103,19 +165,19 @@ const MedicalWritingAIGuide = () => {
 
 研究資料：
 [貼上各研究摘要]`,
-          tips: '可直接用於 Discussion 部分的文獻比較'
-        }
-      ]
-    },
-    outline: {
-      name: '大綱生成',
-      icon: <FileText className="w-5 h-5" />,
-      prompts: [
-        {
-          id: 'out1',
-          title: '觀察性研究大綱',
-          scenario: '規劃世代研究或病例對照研究論文架構',
-          prompt: `為關於[主題]的回溯性世代研究稿件創建詳細大綱。
+                            tips: '可直接用於 Discussion 部分的文獻比較'
+                        }
+                    ]
+                },
+                outline: {
+                    name: '大綱生成',
+                    icon: 'FileText',
+                    prompts: [
+                        {
+                            id: 'out1',
+                            title: '觀察性研究大綱',
+                            scenario: '規劃世代研究或病例對照研究論文架構',
+                            prompt: `為關於[主題]的回溯性世代研究稿件創建詳細大綱。
 
 研究資訊：
 • 樣本數：[N]位病人
@@ -127,13 +189,13 @@ const MedicalWritingAIGuide = () => {
 1. 子標題
 2. 關鍵內容要點
 3. 預估字數分配`,
-          tips: '完成後對照 STROBE 22項清單檢查'
-        },
-        {
-          id: 'out2',
-          title: '臨床試驗大綱',
-          scenario: '規劃RCT論文架構',
-          prompt: `為以下隨機對照試驗創建論文大綱：
+                            tips: '完成後對照 STROBE 22項清單檢查'
+                        },
+                        {
+                            id: 'out2',
+                            title: '臨床試驗大綱',
+                            scenario: '規劃RCT論文架構',
+                            prompt: `為以下隨機對照試驗創建論文大綱：
 
 試驗資訊：
 • 試驗設計：[平行/因子/交叉]
@@ -146,13 +208,13 @@ const MedicalWritingAIGuide = () => {
 1. 開放科學區塊（註冊、計畫書、資料分享）
 2. 流程圖規劃
 3. 各部分字數建議`,
-          tips: 'CONSORT 2025 已取代 2010 版本'
-        },
-        {
-          id: 'out3',
-          title: '案例報告大綱',
-          scenario: '規劃罕見病例報告架構',
-          prompt: `為以下臨床案例報告創建大綱：
+                            tips: 'CONSORT 2025 已取代 2010 版本'
+                        },
+                        {
+                            id: 'out3',
+                            title: '案例報告大綱',
+                            scenario: '規劃罕見病例報告架構',
+                            prompt: `為以下臨床案例報告創建大綱：
 
 案例資訊：
 • 診斷：[疾病名稱]
@@ -164,19 +226,19 @@ const MedicalWritingAIGuide = () => {
 1. 時間軸圖表規劃
 2. 病人觀點段落
 3. 知情同意聲明`,
-          tips: '案例報告是住院醫師最易入門的論文類型'
-        }
-      ]
-    },
-    writing: {
-      name: '段落撰寫',
-      icon: <PenTool className="w-5 h-5" />,
-      prompts: [
-        {
-          id: 'wri1',
-          title: 'Methods 部分',
-          scenario: '撰寫研究方法學描述',
-          prompt: `為檢驗[研究目標]的[研究類型]撰寫 Methods 部分。
+                            tips: '案例報告是住院醫師最易入門的論文類型'
+                        }
+                    ]
+                },
+                writing: {
+                    name: '段落撰寫',
+                    icon: 'PenTool',
+                    prompts: [
+                        {
+                            id: 'wri1',
+                            title: 'Methods 部分',
+                            scenario: '撰寫研究方法學描述',
+                            prompt: `為檢驗[研究目標]的[研究類型]撰寫 Methods 部分。
 
 請包含以下小節：
 1. 研究設計與場域
@@ -194,13 +256,13 @@ const MedicalWritingAIGuide = () => {
 
 格式要求：過去式、被動語態
 字數限制：500字`,
-          tips: '這是AI最能幫助的部分，但需人工確認細節正確'
-        },
-        {
-          id: 'wri2',
-          title: 'Results 敘述',
-          scenario: '將統計表格轉換為文字描述',
-          prompt: `為以下結果表格撰寫敘述性描述。
+                            tips: '這是AI最能幫助的部分，但需人工確認細節正確'
+                        },
+                        {
+                            id: 'wri2',
+                            title: 'Results 敘述',
+                            scenario: '將統計表格轉換為文字描述',
+                            prompt: `為以下結果表格撰寫敘述性描述。
 
 報告要求：
 • 以精確統計數據呈現（含 p 值、95% CI、HR/OR）
@@ -215,13 +277,13 @@ const MedicalWritingAIGuide = () => {
 1. 主要結局發現
 2. 具臨床意義的次要發現
 3. 亞群分析結果（如有）`,
-          tips: '所有數值必須人工核對原始資料'
-        },
-        {
-          id: 'wri3',
-          title: 'Discussion 框架',
-          scenario: '撰寫討論部分的完整架構',
-          prompt: `協助我為關於[主題]的研究撰寫 Discussion 部分。
+                            tips: '所有數值必須人工核對原始資料'
+                        },
+                        {
+                            id: 'wri3',
+                            title: 'Discussion 框架',
+                            scenario: '撰寫討論部分的完整架構',
+                            prompt: `協助我為關於[主題]的研究撰寫 Discussion 部分。
 
 我們的關鍵發現：
 1. [主要發現]
@@ -249,13 +311,13 @@ const MedicalWritingAIGuide = () => {
 第五段：未來研究方向
 • 具體建議
 • 待解決問題`,
-          tips: '觀察性研究使用「相關」而非「效果」用語'
-        },
-        {
-          id: 'wri4',
-          title: '存活分析描述',
-          scenario: '描述Kaplan-Meier分析結果',
-          prompt: `描述以下[病人族群]中[結局]的 Kaplan-Meier 存活分析結果：
+                            tips: '觀察性研究使用「相關」而非「效果」用語'
+                        },
+                        {
+                            id: 'wri4',
+                            title: '存活分析描述',
+                            scenario: '描述Kaplan-Meier分析結果',
+                            prompt: `描述以下[病人族群]中[結局]的 Kaplan-Meier 存活分析結果：
 
 數據：
 • 中位存活期：實驗組 [X] 月 vs 對照組 [Y] 月
@@ -269,19 +331,19 @@ const MedicalWritingAIGuide = () => {
 2. 與預期效果的比較
 3. 臨床意義的脈絡說明
 4. 風險人數表的關鍵時間點數據`,
-          tips: 'Kaplan-Meier 曲線需附風險人數表'
-        }
-      ]
-    },
-    polish: {
-      name: '語言潤飾',
-      icon: <Edit3 className="w-5 h-5" />,
-      prompts: [
-        {
-          id: 'pol1',
-          title: '學術風格編輯',
-          scenario: '提升文稿的學術專業性',
-          prompt: `將以下段落編輯為學術醫學期刊風格。
+                            tips: 'Kaplan-Meier 曲線需附風險人數表'
+                        }
+                    ]
+                },
+                polish: {
+                    name: '語言潤飾',
+                    icon: 'Edit3',
+                    prompts: [
+                        {
+                            id: 'pol1',
+                            title: '學術風格編輯',
+                            scenario: '提升文稿的學術專業性',
+                            prompt: `將以下段落編輯為學術醫學期刊風格。
 
 編輯要求：
 1. 維持科學精確性
@@ -297,13 +359,13 @@ const MedicalWritingAIGuide = () => {
 請提供：
 • 修改後版本
 • 主要修改說明（條列式）`,
-          tips: 'Claude 在語言潤飾方面評分最高'
-        },
-        {
-          id: 'pol2',
-          title: '字數精簡',
-          scenario: '在保留關鍵資訊下縮減字數',
-          prompt: `將以下段落縮減至 [目標字數] 字。
+                            tips: 'Claude 在語言潤飾方面評分最高'
+                        },
+                        {
+                            id: 'pol2',
+                            title: '字數精簡',
+                            scenario: '在保留關鍵資訊下縮減字數',
+                            prompt: `將以下段落縮減至 [目標字數] 字。
 
 目前字數：[原始字數]
 目標字數：[目標字數]
@@ -319,13 +381,13 @@ const MedicalWritingAIGuide = () => {
 [貼上文字]
 
 請提供精簡版本並標註刪除的內容類型。`,
-          tips: '投稿前常需配合期刊字數限制精簡'
-        },
-        {
-          id: 'pol3',
-          title: '非母語者語言改善',
-          scenario: '改善非英語母語者的英文表達',
-          prompt: `作為學術英文編輯，改善以下由非英語母語者撰寫的段落。
+                            tips: '投稿前常需配合期刊字數限制精簡'
+                        },
+                        {
+                            id: 'pol3',
+                            title: '非母語者語言改善',
+                            scenario: '改善非英語母語者的英文表達',
+                            prompt: `作為學術英文編輯，改善以下由非英語母語者撰寫的段落。
 
 改善重點：
 1. 冠詞使用（a/an/the）
@@ -341,19 +403,19 @@ const MedicalWritingAIGuide = () => {
 請提供：
 • 修改後版本
 • 常見錯誤模式說明（供未來自我檢查）`,
-          tips: 'ICMJE 認可此為合法 AI 使用方式'
-        }
-      ]
-    },
-    submission: {
-      name: '投稿準備',
-      icon: <Clipboard className="w-5 h-5" />,
-      prompts: [
-        {
-          id: 'sub1',
-          title: 'Cover Letter',
-          scenario: '撰寫期刊投稿信',
-          prompt: `為投稿 [期刊名稱] 的研究撰寫 Cover Letter。
+                            tips: 'ICMJE 認可此為合法 AI 使用方式'
+                        }
+                    ]
+                },
+                submission: {
+                    name: '投稿準備',
+                    icon: 'Clipboard',
+                    prompts: [
+                        {
+                            id: 'sub1',
+                            title: 'Cover Letter',
+                            scenario: '撰寫期刊投稿信',
+                            prompt: `為投稿 [期刊名稱] 的研究撰寫 Cover Letter。
 
 研究資訊：
 • 標題：[論文標題]
@@ -373,13 +435,13 @@ const MedicalWritingAIGuide = () => {
 7. 通訊作者資訊
 
 語調：專業但不過度謙卑`,
-          tips: '務必包含 AI 使用揭露聲明'
-        },
-        {
-          id: 'sub2',
-          title: 'AI 揭露聲明',
-          scenario: '撰寫符合期刊要求的AI使用揭露',
-          prompt: `根據以下 AI 使用情況，撰寫符合 ICMJE 指引的揭露聲明。
+                            tips: '務必包含 AI 使用揭露聲明'
+                        },
+                        {
+                            id: 'sub2',
+                            title: 'AI 揭露聲明',
+                            scenario: '撰寫符合期刊要求的AI使用揭露',
+                            prompt: `根據以下 AI 使用情況，撰寫符合 ICMJE 指引的揭露聲明。
 
 AI 使用情況：
 • 使用工具：[ChatGPT-4/Claude/其他]
@@ -395,13 +457,13 @@ AI 使用情況：
 • 具體使用目的
 • 人工審閱確認
 • 作者責任聲明`,
-          tips: '不同期刊要求放在不同位置'
-        },
-        {
-          id: 'sub3',
-          title: '審稿回覆',
-          scenario: '撰寫審稿意見回覆信',
-          prompt: `協助我回覆以下審稿意見。
+                            tips: '不同期刊要求放在不同位置'
+                        },
+                        {
+                            id: 'sub3',
+                            title: '審稿回覆',
+                            scenario: '撰寫審稿意見回覆信',
+                            prompt: `協助我回覆以下審稿意見。
 
 審稿意見：
 [貼上審稿意見]
@@ -423,19 +485,19 @@ AI 使用情況：
 2. 直接回應問題核心
 3. 說明具體修改內容
 4. 若不同意，提供文獻支持`,
-          tips: '禮貌但堅定，有理據時可以不同意'
-        }
-      ]
-    },
-    statistics: {
-      name: '統計報告',
-      icon: <BarChart3 className="w-5 h-5" />,
-      prompts: [
-        {
-          id: 'sta1',
-          title: '基線特徵表描述',
-          scenario: '描述 Table 1 人口學特徵',
-          prompt: `為以下基線特徵表撰寫 Results 第一段描述。
+                            tips: '禮貌但堅定，有理據時可以不同意'
+                        }
+                    ]
+                },
+                statistics: {
+                    name: '統計報告',
+                    icon: 'BarChart3',
+                    prompts: [
+                        {
+                            id: 'sta1',
+                            title: '基線特徵表描述',
+                            scenario: '描述 Table 1 人口學特徵',
+                            prompt: `為以下基線特徵表撰寫 Results 第一段描述。
 
 研究資訊：
 • 總樣本數：[N]
@@ -454,13 +516,13 @@ AI 使用情況：
 1. 整體族群特徵
 2. 組間主要差異
 3. 與目標族群的代表性`,
-          tips: 'RCT 基線表的組間差異是隨機產生，不需統計檢定'
-        },
-        {
-          id: 'sta2',
-          title: '多變項分析報告',
-          scenario: '描述 Cox 迴歸或邏輯迴歸結果',
-          prompt: `描述以下多變項分析結果：
+                            tips: 'RCT 基線表的組間差異是隨機產生，不需統計檢定'
+                        },
+                        {
+                            id: 'sta2',
+                            title: '多變項分析報告',
+                            scenario: '描述 Cox 迴歸或邏輯迴歸結果',
+                            prompt: `描述以下多變項分析結果：
 
 分析類型：[Cox 迴歸/邏輯迴歸/線性迴歸]
 結局變項：[Y]
@@ -479,13 +541,13 @@ AI 使用情況：
 • HR/OR/β 係數
 • 95% 信賴區間
 • p 值`,
-          tips: 'STROBE 要求同時報告未校正與校正估計值'
-        },
-        {
-          id: 'sta3',
-          title: '亞群分析描述',
-          scenario: '描述預設亞群分析與森林圖',
-          prompt: `描述以下亞群分析結果：
+                            tips: 'STROBE 要求同時報告未校正與校正估計值'
+                        },
+                        {
+                            id: 'sta3',
+                            title: '亞群分析描述',
+                            scenario: '描述預設亞群分析與森林圖',
+                            prompt: `描述以下亞群分析結果：
 
 分析變項：[亞群變項列表]
 主要結局：[結局指標]
@@ -502,563 +564,565 @@ AI 使用情況：
 • 區分預設 vs 探索性分析
 • 除非預先設定且檢定力足夠，否則不報告交互作用 p 值
 • 避免過度詮釋亞群差異`,
-          tips: '森林圖是呈現亞群分析的標準方式'
-        }
-      ]
-    }
-  };
+                            tips: '森林圖是呈現亞群分析的標準方式'
+                        }
+                    ]
+                }
+            };
 
-  const ethicsGuidelines = [
-    { 
-      title: 'AI 不能列為作者', 
-      desc: '無法滿足責任、問責與利益衝突揭露要求',
-      icon: <Users className="w-6 h-6" />
-    },
-    { 
-      title: '必須揭露 AI 使用', 
-      desc: '於 Cover Letter 與稿件中明確說明',
-      icon: <Shield className="w-6 h-6" />
-    },
-    { 
-      title: '人類負全部責任', 
-      desc: '對準確性、完整性與原創性負責',
-      icon: <CheckCircle className="w-6 h-6" />
-    },
-    { 
-      title: '禁止引用 AI 為來源', 
-      desc: 'AI 生成的引用需全部人工驗證',
-      icon: <AlertTriangle className="w-6 h-6" />
-    }
-  ];
+            const ethicsGuidelines = [
+                { 
+                    title: 'AI 不能列為作者', 
+                    desc: '無法滿足責任、問責與利益衝突揭露要求',
+                    icon: 'Users'
+                },
+                { 
+                    title: '必須揭露 AI 使用', 
+                    desc: '於 Cover Letter 與稿件中明確說明',
+                    icon: 'Shield'
+                },
+                { 
+                    title: '人類負全部責任', 
+                    desc: '對準確性、完整性與原創性負責',
+                    icon: 'CheckCircle'
+                },
+                { 
+                    title: '禁止引用 AI 為來源', 
+                    desc: 'AI 生成的引用需全部人工驗證',
+                    icon: 'AlertTriangle'
+                }
+            ];
 
-  const sections = [
-    { id: 'overview', name: '總覽', icon: <BookOpen className="w-5 h-5" /> },
-    { id: 'tools', name: 'AI 工具比較', icon: <Brain className="w-5 h-5" /> },
-    { id: 'prompts', name: 'Prompt 範例庫', icon: <MessageSquare className="w-5 h-5" /> },
-    { id: 'ethics', name: '倫理規範', icon: <Shield className="w-5 h-5" /> }
-  ];
+            const sections = [
+                { id: 'overview', name: '總覽', icon: 'BookOpen' },
+                { id: 'tools', name: 'AI 工具比較', icon: 'Brain' },
+                { id: 'prompts', name: 'Prompt 範例庫', icon: 'MessageSquare' },
+                { id: 'ethics', name: '倫理規範', icon: 'Shield' }
+            ];
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
-      {/* Header */}
-      <header className="bg-slate-800/50 backdrop-blur-lg border-b border-slate-700 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl">
-                <Sparkles className="w-6 h-6" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold">AI 協作醫學論文寫作指南</h1>
-                <p className="text-sm text-slate-400">腫瘤科住院醫師專用 | R3-R5</p>
-              </div>
-            </div>
-            <div className="hidden md:flex items-center gap-2 text-sm text-slate-400">
-              <Zap className="w-4 h-4 text-amber-400" />
-              <span>2024-2025 最新指引</span>
-            </div>
-          </div>
-        </div>
-      </header>
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+                    {/* Header */}
+                    <header className="bg-slate-800/50 backdrop-blur-lg border-b border-slate-700 sticky top-0 z-50">
+                        <div className="max-w-7xl mx-auto px-4 py-4">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl">
+                                        <Icon name="Sparkles" className="w-6 h-6" />
+                                    </div>
+                                    <div>
+                                        <h1 className="text-xl font-bold">AI 協作醫學論文寫作指南</h1>
+                                        <p className="text-sm text-slate-400">腫瘤科住院醫師專用 | R3-R5</p>
+                                    </div>
+                                </div>
+                                <div className="hidden md:flex items-center gap-2 text-sm text-slate-400">
+                                    <Icon name="Zap" className="w-4 h-4 text-amber-400" />
+                                    <span>2024-2025 最新指引</span>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
 
-      {/* Navigation */}
-      <nav className="bg-slate-800/30 border-b border-slate-700">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex gap-1 overflow-x-auto py-2">
-            {sections.map(section => (
-              <button
-                key={section.id}
-                onClick={() => setActiveSection(section.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap transition-all ${
-                  activeSection === section.id 
-                    ? 'bg-blue-600 text-white' 
-                    : 'text-slate-400 hover:bg-slate-700 hover:text-white'
-                }`}
-              >
-                {section.icon}
-                {section.name}
-              </button>
-            ))}
-          </div>
-        </div>
-      </nav>
+                    {/* Navigation */}
+                    <nav className="bg-slate-800/30 border-b border-slate-700">
+                        <div className="max-w-7xl mx-auto px-4">
+                            <div className="flex gap-1 overflow-x-auto py-2">
+                                {sections.map(section => (
+                                    <button
+                                        key={section.id}
+                                        onClick={() => setActiveSection(section.id)}
+                                        className={`flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap transition-all ${
+                                            activeSection === section.id 
+                                                ? 'bg-blue-600 text-white' 
+                                                : 'text-slate-400 hover:bg-slate-700 hover:text-white'
+                                        }`}
+                                    >
+                                        <Icon name={section.icon} className="w-5 h-5" />
+                                        {section.name}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </nav>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        {/* Overview Section */}
-        {activeSection === 'overview' && (
-          <div className="space-y-8">
-            {/* Hero Stats */}
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="bg-gradient-to-br from-blue-600/20 to-blue-800/20 border border-blue-500/30 rounded-2xl p-6">
-                <div className="text-4xl font-bold text-blue-400">13.5%</div>
-                <div className="text-slate-300 mt-2">生物醫學摘要已使用 LLM 協助撰寫</div>
-                <div className="text-sm text-slate-500 mt-1">2024年 PubMed 分析</div>
-              </div>
-              <div className="bg-gradient-to-br from-amber-600/20 to-amber-800/20 border border-amber-500/30 rounded-2xl p-6">
-                <div className="text-4xl font-bold text-amber-400">9%</div>
-                <div className="text-slate-300 mt-2">投稿者主動揭露 AI 使用</div>
-                <div className="text-sm text-slate-500 mt-1">AACR 2025 研究</div>
-              </div>
-              <div className="bg-gradient-to-br from-rose-600/20 to-rose-800/20 border border-rose-500/30 rounded-2xl p-6">
-                <div className="text-4xl font-bold text-rose-400">18-55%</div>
-                <div className="text-slate-300 mt-2">AI 生成引用的虛構率</div>
-                <div className="text-sm text-slate-500 mt-1">依模型版本而異</div>
-              </div>
-            </div>
+                    <main className="max-w-7xl mx-auto px-4 py-8">
+                        {/* Overview Section */}
+                        {activeSection === 'overview' && (
+                            <div className="space-y-8">
+                                {/* Hero Stats */}
+                                <div className="grid md:grid-cols-3 gap-6">
+                                    <div className="bg-gradient-to-br from-blue-600/20 to-blue-800/20 border border-blue-500/30 rounded-2xl p-6">
+                                        <div className="text-4xl font-bold text-blue-400">13.5%</div>
+                                        <div className="text-slate-300 mt-2">生物醫學摘要已使用 LLM 協助撰寫</div>
+                                        <div className="text-sm text-slate-500 mt-1">2024年 PubMed 分析</div>
+                                    </div>
+                                    <div className="bg-gradient-to-br from-amber-600/20 to-amber-800/20 border border-amber-500/30 rounded-2xl p-6">
+                                        <div className="text-4xl font-bold text-amber-400">9%</div>
+                                        <div className="text-slate-300 mt-2">投稿者主動揭露 AI 使用</div>
+                                        <div className="text-sm text-slate-500 mt-1">AACR 2025 研究</div>
+                                    </div>
+                                    <div className="bg-gradient-to-br from-rose-600/20 to-rose-800/20 border border-rose-500/30 rounded-2xl p-6">
+                                        <div className="text-4xl font-bold text-rose-400">18-55%</div>
+                                        <div className="text-slate-300 mt-2">AI 生成引用的虛構率</div>
+                                        <div className="text-sm text-slate-500 mt-1">依模型版本而異</div>
+                                    </div>
+                                </div>
 
-            {/* Workflow */}
-            <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
-              <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
-                <Zap className="w-5 h-5 text-amber-400" />
-                AI 協作論文寫作流程
-              </h2>
-              <div className="grid md:grid-cols-5 gap-4">
-                {[
-                  { step: '1', title: '文獻整理', tool: 'NotebookLM', desc: '上傳論文，識別研究缺口' },
-                  { step: '2', title: '大綱生成', tool: 'Claude', desc: '依報告指引建立架構' },
-                  { step: '3', title: '初稿撰寫', tool: 'ChatGPT', desc: '各段落初稿產生' },
-                  { step: '4', title: '語言潤飾', tool: 'Claude', desc: '學術風格編輯' },
-                  { step: '5', title: '驗證審閱', tool: '人工', desc: '引用查核、數據確認' }
-                ].map((item, idx) => (
-                  <div key={idx} className="relative">
-                    <div className="bg-slate-700/50 rounded-xl p-4 h-full">
-                      <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-sm font-bold mb-3">
-                        {item.step}
-                      </div>
-                      <h3 className="font-semibold mb-1">{item.title}</h3>
-                      <div className="text-sm text-blue-400 mb-2">{item.tool}</div>
-                      <p className="text-sm text-slate-400">{item.desc}</p>
-                    </div>
-                    {idx < 4 && (
-                      <div className="hidden md:block absolute top-1/2 -right-2 transform -translate-y-1/2 text-slate-600">
-                        →
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
+                                {/* Workflow */}
+                                <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
+                                    <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
+                                        <Icon name="Zap" className="w-5 h-5 text-amber-400" />
+                                        AI 協作論文寫作流程
+                                    </h2>
+                                    <div className="grid md:grid-cols-5 gap-4">
+                                        {[
+                                            { step: '1', title: '文獻整理', tool: 'NotebookLM', desc: '上傳論文，識別研究缺口' },
+                                            { step: '2', title: '大綱生成', tool: 'Claude', desc: '依報告指引建立架構' },
+                                            { step: '3', title: '初稿撰寫', tool: 'ChatGPT', desc: '各段落初稿產生' },
+                                            { step: '4', title: '語言潤飾', tool: 'Claude', desc: '學術風格編輯' },
+                                            { step: '5', title: '驗證審閱', tool: '人工', desc: '引用查核、數據確認' }
+                                        ].map((item, idx) => (
+                                            <div key={idx} className="relative">
+                                                <div className="bg-slate-700/50 rounded-xl p-4 h-full">
+                                                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-sm font-bold mb-3">
+                                                        {item.step}
+                                                    </div>
+                                                    <h3 className="font-semibold mb-1">{item.title}</h3>
+                                                    <div className="text-sm text-blue-400 mb-2">{item.tool}</div>
+                                                    <p className="text-sm text-slate-400">{item.desc}</p>
+                                                </div>
+                                                {idx < 4 && (
+                                                    <div className="hidden md:block absolute top-1/2 -right-2 transform -translate-y-1/2 text-slate-600">
+                                                        →
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
 
-            {/* Quick Guidelines */}
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-emerald-900/20 border border-emerald-500/30 rounded-2xl p-6">
-                <h3 className="text-lg font-semibold text-emerald-400 mb-4 flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5" />
-                  適合 AI 協助的任務
-                </h3>
-                <ul className="space-y-2 text-slate-300">
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-400 mt-1">✓</span>
-                    文獻摘要與綜整
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-400 mt-1">✓</span>
-                    Methods 部分標準化撰寫
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-400 mt-1">✓</span>
-                    語言潤飾與文法修正
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-400 mt-1">✓</span>
-                    統計結果的敘述性描述
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-400 mt-1">✓</span>
-                    表格格式化與組織
-                  </li>
-                </ul>
-              </div>
-              <div className="bg-rose-900/20 border border-rose-500/30 rounded-2xl p-6">
-                <h3 className="text-lg font-semibold text-rose-400 mb-4 flex items-center gap-2">
-                  <AlertTriangle className="w-5 h-5" />
-                  需謹慎或避免的任務
-                </h3>
-                <ul className="space-y-2 text-slate-300">
-                  <li className="flex items-start gap-2">
-                    <span className="text-rose-400 mt-1">✗</span>
-                    讓 AI 生成參考文獻（高虛構率）
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-rose-400 mt-1">✗</span>
-                    直接使用 AI 產生的統計數據
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-rose-400 mt-1">✗</span>
-                    未經改寫的 AI 生成內容
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-rose-400 mt-1">✗</span>
-                    AI 協助同儕審查（多數期刊禁止）
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-rose-400 mt-1">✗</span>
-                    上傳未發表稿件至公開 AI（保密性）
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        )}
+                                {/* Quick Guidelines */}
+                                <div className="grid md:grid-cols-2 gap-6">
+                                    <div className="bg-emerald-900/20 border border-emerald-500/30 rounded-2xl p-6">
+                                        <h3 className="text-lg font-semibold text-emerald-400 mb-4 flex items-center gap-2">
+                                            <Icon name="CheckCircle" className="w-5 h-5" />
+                                            適合 AI 協助的任務
+                                        </h3>
+                                        <ul className="space-y-2 text-slate-300">
+                                            <li className="flex items-start gap-2">
+                                                <span className="text-emerald-400 mt-1">✓</span>
+                                                文獻摘要與綜整
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <span className="text-emerald-400 mt-1">✓</span>
+                                                Methods 部分標準化撰寫
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <span className="text-emerald-400 mt-1">✓</span>
+                                                語言潤飾與文法修正
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <span className="text-emerald-400 mt-1">✓</span>
+                                                統計結果的敘述性描述
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <span className="text-emerald-400 mt-1">✓</span>
+                                                表格格式化與組織
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div className="bg-rose-900/20 border border-rose-500/30 rounded-2xl p-6">
+                                        <h3 className="text-lg font-semibold text-rose-400 mb-4 flex items-center gap-2">
+                                            <Icon name="AlertTriangle" className="w-5 h-5" />
+                                            需謹慎或避免的任務
+                                        </h3>
+                                        <ul className="space-y-2 text-slate-300">
+                                            <li className="flex items-start gap-2">
+                                                <span className="text-rose-400 mt-1">✗</span>
+                                                讓 AI 生成參考文獻（高虛構率）
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <span className="text-rose-400 mt-1">✗</span>
+                                                直接使用 AI 產生的統計數據
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <span className="text-rose-400 mt-1">✗</span>
+                                                未經改寫的 AI 生成內容
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <span className="text-rose-400 mt-1">✗</span>
+                                                AI 協助同儕審查（多數期刊禁止）
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <span className="text-rose-400 mt-1">✗</span>
+                                                上傳未發表稿件至公開 AI（保密性）
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
-        {/* Tools Section */}
-        {activeSection === 'tools' && (
-          <div className="space-y-6">
-            {/* Tool Selector */}
-            <div className="flex flex-wrap gap-3">
-              {Object.entries(tools).map(([key, tool]) => (
-                <button
-                  key={key}
-                  onClick={() => setActiveTool(key)}
-                  className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${
-                    activeTool === key
-                      ? `bg-gradient-to-r ${tool.color} text-white shadow-lg`
-                      : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-                  }`}
-                >
-                  <span className="text-xl">{tool.icon}</span>
-                  {tool.name}
-                </button>
-              ))}
-            </div>
+                        {/* Tools Section */}
+                        {activeSection === 'tools' && (
+                            <div className="space-y-6">
+                                {/* Tool Selector */}
+                                <div className="flex flex-wrap gap-3">
+                                    {Object.entries(tools).map(([key, tool]) => (
+                                        <button
+                                            key={key}
+                                            onClick={() => setActiveTool(key)}
+                                            className={`flex items-center gap-2 px-5 py-3 rounded-xl transition-all ${
+                                                activeTool === key
+                                                    ? `bg-gradient-to-r ${tool.color} text-white shadow-lg`
+                                                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                                            }`}
+                                        >
+                                            <span className="text-xl">{tool.icon}</span>
+                                            {tool.name}
+                                        </button>
+                                    ))}
+                                </div>
 
-            {/* Tool Detail */}
-            <div className={`bg-gradient-to-br ${tools[activeTool].color} rounded-2xl p-1`}>
-              <div className="bg-slate-900 rounded-xl p-6">
-                <div className="flex items-center gap-3 mb-6">
-                  <span className="text-4xl">{tools[activeTool].icon}</span>
-                  <div>
-                    <h2 className="text-2xl font-bold">{tools[activeTool].name}</h2>
-                    <p className="text-slate-400">醫學論文寫作應用定位</p>
-                  </div>
+                                {/* Tool Detail */}
+                                <div className={`bg-gradient-to-br ${tools[activeTool].color} rounded-2xl p-1`}>
+                                    <div className="bg-slate-900 rounded-xl p-6">
+                                        <div className="flex items-center gap-3 mb-6">
+                                            <span className="text-4xl">{tools[activeTool].icon}</span>
+                                            <div>
+                                                <h2 className="text-2xl font-bold">{tools[activeTool].name}</h2>
+                                                <p className="text-slate-400">醫學論文寫作應用定位</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid md:grid-cols-3 gap-6">
+                                            <div className="bg-slate-800/50 rounded-xl p-4">
+                                                <h3 className="font-semibold text-emerald-400 mb-3 flex items-center gap-2">
+                                                    <Icon name="CheckCircle" className="w-4 h-4" />
+                                                    優勢
+                                                </h3>
+                                                <ul className="space-y-2">
+                                                    {tools[activeTool].strengths.map((s, i) => (
+                                                        <li key={i} className="text-slate-300 text-sm flex items-start gap-2">
+                                                            <span className="text-emerald-400 mt-1">•</span>
+                                                            {s}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                            <div className="bg-slate-800/50 rounded-xl p-4">
+                                                <h3 className="font-semibold text-amber-400 mb-3 flex items-center gap-2">
+                                                    <Icon name="AlertTriangle" className="w-4 h-4" />
+                                                    限制
+                                                </h3>
+                                                <ul className="space-y-2">
+                                                    {tools[activeTool].limitations.map((l, i) => (
+                                                        <li key={i} className="text-slate-300 text-sm flex items-start gap-2">
+                                                            <span className="text-amber-400 mt-1">•</span>
+                                                            {l}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                            <div className="bg-slate-800/50 rounded-xl p-4">
+                                                <h3 className="font-semibold text-blue-400 mb-3 flex items-center gap-2">
+                                                    <Icon name="Zap" className="w-4 h-4" />
+                                                    最佳用途
+                                                </h3>
+                                                <ul className="space-y-2">
+                                                    {tools[activeTool].bestFor.map((b, i) => (
+                                                        <li key={i} className="text-slate-300 text-sm flex items-start gap-2">
+                                                            <span className="text-blue-400 mt-1">•</span>
+                                                            {b}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Decision Table */}
+                                <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
+                                    <h3 className="text-lg font-semibold mb-4">🎯 任務 → 工具選擇快速指南</h3>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-sm">
+                                            <thead>
+                                                <tr className="border-b border-slate-700">
+                                                    <th className="text-left py-3 px-4 text-slate-400">任務</th>
+                                                    <th className="text-left py-3 px-4 text-slate-400">首選工具</th>
+                                                    <th className="text-left py-3 px-4 text-slate-400">次選工具</th>
+                                                    <th className="text-left py-3 px-4 text-slate-400">注意事項</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-slate-700/50">
+                                                <tr>
+                                                    <td className="py-3 px-4">文獻綜整</td>
+                                                    <td className="py-3 px-4 text-amber-400">📚 NotebookLM</td>
+                                                    <td className="py-3 px-4 text-purple-400">🧠 Claude</td>
+                                                    <td className="py-3 px-4 text-slate-400">幻覺風險最低</td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="py-3 px-4">初稿撰寫</td>
+                                                    <td className="py-3 px-4 text-emerald-400">🤖 ChatGPT-4</td>
+                                                    <td className="py-3 px-4 text-purple-400">🧠 Claude</td>
+                                                    <td className="py-3 px-4 text-slate-400">需大幅人工改寫</td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="py-3 px-4">語言潤飾</td>
+                                                    <td className="py-3 px-4 text-purple-400">🧠 Claude</td>
+                                                    <td className="py-3 px-4 text-emerald-400">🤖 ChatGPT-4</td>
+                                                    <td className="py-3 px-4 text-slate-400">完整性評分最高</td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="py-3 px-4">引用查找</td>
+                                                    <td className="py-3 px-4 text-rose-400 font-semibold">⚠️ 禁止使用 AI</td>
+                                                    <td className="py-3 px-4">-</td>
+                                                    <td className="py-3 px-4 text-slate-400">使用 PubMed/Scholar</td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="py-3 px-4">即時資訊</td>
+                                                    <td className="py-3 px-4 text-cyan-400">✨ Gemini</td>
+                                                    <td className="py-3 px-4">-</td>
+                                                    <td className="py-3 px-4 text-slate-400">可存取即時網路</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Prompts Section */}
+                        {activeSection === 'prompts' && (
+                            <div className="space-y-6">
+                                {/* Category Tabs */}
+                                <div className="flex flex-wrap gap-2">
+                                    {Object.entries(promptCategories).map(([key, cat]) => (
+                                        <button
+                                            key={key}
+                                            onClick={() => setActivePromptCategory(key)}
+                                            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                                                activePromptCategory === key
+                                                    ? 'bg-blue-600 text-white'
+                                                    : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                                            }`}
+                                        >
+                                            <Icon name={cat.icon} className="w-5 h-5" />
+                                            {cat.name}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {/* Prompts List */}
+                                <div className="space-y-4">
+                                    {promptCategories[activePromptCategory].prompts.map(prompt => (
+                                        <div 
+                                            key={prompt.id}
+                                            className="bg-slate-800/50 rounded-xl border border-slate-700 overflow-hidden"
+                                        >
+                                            <button
+                                                onClick={() => toggleCard(prompt.id)}
+                                                className="w-full p-4 flex items-center justify-between hover:bg-slate-700/30 transition-colors"
+                                            >
+                                                <div className="text-left">
+                                                    <h3 className="font-semibold text-lg">{prompt.title}</h3>
+                                                    <p className="text-sm text-slate-400 mt-1">{prompt.scenario}</p>
+                                                </div>
+                                                <Icon 
+                                                    name={expandedCards[prompt.id] ? 'ChevronUp' : 'ChevronDown'} 
+                                                    className="w-5 h-5 text-slate-400" 
+                                                />
+                                            </button>
+                                            
+                                            {expandedCards[prompt.id] && (
+                                                <div className="px-4 pb-4 space-y-4">
+                                                    <div className="relative">
+                                                        <pre className="bg-slate-900 rounded-lg p-4 text-sm text-slate-300 whitespace-pre-wrap overflow-x-auto">
+                                                            {prompt.prompt}
+                                                        </pre>
+                                                        <button
+                                                            onClick={() => copyToClipboard(prompt.prompt, prompt.id)}
+                                                            className="absolute top-2 right-2 p-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
+                                                        >
+                                                            <Icon 
+                                                                name={copiedPrompt === prompt.id ? 'Check' : 'Copy'} 
+                                                                className={`w-4 h-4 ${copiedPrompt === prompt.id ? 'text-emerald-400' : ''}`} 
+                                                            />
+                                                        </button>
+                                                    </div>
+                                                    <div className="flex items-start gap-2 text-sm bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
+                                                        <Icon name="Sparkles" className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+                                                        <span className="text-blue-200"><strong>小提示：</strong>{prompt.tips}</span>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Ethics Section */}
+                        {activeSection === 'ethics' && (
+                            <div className="space-y-6">
+                                {/* Core Principles */}
+                                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                    {ethicsGuidelines.map((item, idx) => (
+                                        <div key={idx} className="bg-slate-800/50 rounded-xl p-5 border border-slate-700">
+                                            <div className="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center text-blue-400 mb-4">
+                                                <Icon name={item.icon} className="w-6 h-6" />
+                                            </div>
+                                            <h3 className="font-semibold mb-2">{item.title}</h3>
+                                            <p className="text-sm text-slate-400">{item.desc}</p>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Journal Policies */}
+                                <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
+                                    <h3 className="text-lg font-semibold mb-4">📋 主要期刊 AI 政策比較</h3>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-sm">
+                                            <thead>
+                                                <tr className="border-b border-slate-700">
+                                                    <th className="text-left py-3 px-4 text-slate-400">期刊</th>
+                                                    <th className="text-center py-3 px-4 text-slate-400">AI 作者</th>
+                                                    <th className="text-center py-3 px-4 text-slate-400">需揭露</th>
+                                                    <th className="text-center py-3 px-4 text-slate-400">AI 圖像</th>
+                                                    <th className="text-center py-3 px-4 text-slate-400">同儕審查</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-slate-700/50">
+                                                {[
+                                                    { name: 'NEJM', author: '禁止', disclose: '是', image: '個案審核', review: '限制' },
+                                                    { name: 'JAMA', author: '禁止', disclose: '是', image: '有限', review: '禁止' },
+                                                    { name: 'Lancet', author: '禁止', disclose: '是', image: '個案審核', review: '禁止' },
+                                                    { name: 'Nature', author: '禁止', disclose: '是', image: '多數禁止', review: '禁止' },
+                                                    { name: 'JCO', author: '禁止', disclose: '是', image: '依 ICMJE', review: '禁止' },
+                                                ].map((journal, idx) => (
+                                                    <tr key={idx}>
+                                                        <td className="py-3 px-4 font-medium">{journal.name}</td>
+                                                        <td className="py-3 px-4 text-center text-rose-400">{journal.author}</td>
+                                                        <td className="py-3 px-4 text-center text-emerald-400">{journal.disclose}</td>
+                                                        <td className="py-3 px-4 text-center text-amber-400">{journal.image}</td>
+                                                        <td className="py-3 px-4 text-center text-rose-400">{journal.review}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                {/* Disclosure Template */}
+                                <div className="bg-gradient-to-br from-blue-900/30 to-purple-900/30 rounded-2xl p-6 border border-blue-500/30">
+                                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                                        <Icon name="FileText" className="w-5 h-5 text-blue-400" />
+                                        AI 使用揭露聲明範本
+                                    </h3>
+                                    <div className="relative bg-slate-900/50 rounded-lg p-4">
+                                        <p className="text-slate-300 text-sm leading-relaxed">
+                                            "The authors used <span className="text-blue-400">[tool name, version]</span> to assist with <span className="text-blue-400">[specific tasks, e.g., language editing, grammar checking]</span>. All AI-generated content was reviewed and verified by the authors, who take full responsibility for the accuracy of the final manuscript."
+                                        </p>
+                                        <button
+                                            onClick={() => copyToClipboard('The authors used [tool name, version] to assist with [specific tasks, e.g., language editing, grammar checking]. All AI-generated content was reviewed and verified by the authors, who take full responsibility for the accuracy of the final manuscript.', 'disclosure')}
+                                            className="absolute top-2 right-2 p-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
+                                        >
+                                            <Icon 
+                                                name={copiedPrompt === 'disclosure' ? 'Check' : 'Copy'} 
+                                                className={`w-4 h-4 ${copiedPrompt === 'disclosure' ? 'text-emerald-400' : ''}`} 
+                                            />
+                                        </button>
+                                    </div>
+                                    <p className="text-sm text-slate-500 mt-3">
+                                        * 揭露位置：寫作協助 → 致謝；資料分析/圖表產生 → 方法
+                                    </p>
+                                </div>
+
+                                {/* Verification Checklist */}
+                                <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
+                                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                                        <Icon name="CheckCircle" className="w-5 h-5 text-emerald-400" />
+                                        AI 生成內容驗證檢查表
+                                    </h3>
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        <div>
+                                            <h4 className="font-medium text-amber-400 mb-3">引用驗證（必做）</h4>
+                                            <ul className="space-y-2 text-sm text-slate-300">
+                                                <li className="flex items-start gap-2">
+                                                    <span className="text-slate-500">□</span>
+                                                    Google Scholar 以引號搜尋完整標題
+                                                </li>
+                                                <li className="flex items-start gap-2">
+                                                    <span className="text-slate-500">□</span>
+                                                    doi.org 驗證 DOI 連結至正確論文
+                                                </li>
+                                                <li className="flex items-start gap-2">
+                                                    <span className="text-slate-500">□</span>
+                                                    PubMed 核對作者發表清單
+                                                </li>
+                                                <li className="flex items-start gap-2">
+                                                    <span className="text-slate-500">□</span>
+                                                    交叉核對期刊卷期與頁碼
+                                                </li>
+                                                <li className="flex items-start gap-2">
+                                                    <span className="text-slate-500">□</span>
+                                                    存取實際論文確認內容符合宣稱
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-medium text-amber-400 mb-3">內容驗證</h4>
+                                            <ul className="space-y-2 text-sm text-slate-300">
+                                                <li className="flex items-start gap-2">
+                                                    <span className="text-slate-500">□</span>
+                                                    對照原始來源查核統計數據
+                                                </li>
+                                                <li className="flex items-start gap-2">
+                                                    <span className="text-slate-500">□</span>
+                                                    以權威來源驗證藥物名稱、劑量
+                                                </li>
+                                                <li className="flex items-start gap-2">
+                                                    <span className="text-slate-500">□</span>
+                                                    以現行版本確認指引建議
+                                                </li>
+                                                <li className="flex items-start gap-2">
+                                                    <span className="text-slate-500">□</span>
+                                                    以 clinicaltrials.gov 核對試驗結果
+                                                </li>
+                                                <li className="flex items-start gap-2">
+                                                    <span className="text-slate-500">□</span>
+                                                    通過抄襲偵測軟體檢查
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="bg-slate-800/30 border-t border-slate-700 mt-12">
+                        <div className="max-w-7xl mx-auto px-4 py-6">
+                            <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-500">
+                                <div>
+                                    參考指引：ICMJE 2024 | COPE 2024 | STROBE | CONSORT 2025 | CARE
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Icon name="AlertTriangle" className="w-4 h-4 text-amber-500" />
+                                    所有 AI 生成內容需人工驗證，作者負全部責任
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
                 </div>
+            );
+        };
 
-                <div className="grid md:grid-cols-3 gap-6">
-                  <div className="bg-slate-800/50 rounded-xl p-4">
-                    <h3 className="font-semibold text-emerald-400 mb-3 flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4" />
-                      優勢
-                    </h3>
-                    <ul className="space-y-2">
-                      {tools[activeTool].strengths.map((s, i) => (
-                        <li key={i} className="text-slate-300 text-sm flex items-start gap-2">
-                          <span className="text-emerald-400 mt-1">•</span>
-                          {s}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="bg-slate-800/50 rounded-xl p-4">
-                    <h3 className="font-semibold text-amber-400 mb-3 flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4" />
-                      限制
-                    </h3>
-                    <ul className="space-y-2">
-                      {tools[activeTool].limitations.map((l, i) => (
-                        <li key={i} className="text-slate-300 text-sm flex items-start gap-2">
-                          <span className="text-amber-400 mt-1">•</span>
-                          {l}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="bg-slate-800/50 rounded-xl p-4">
-                    <h3 className="font-semibold text-blue-400 mb-3 flex items-center gap-2">
-                      <Zap className="w-4 h-4" />
-                      最佳用途
-                    </h3>
-                    <ul className="space-y-2">
-                      {tools[activeTool].bestFor.map((b, i) => (
-                        <li key={i} className="text-slate-300 text-sm flex items-start gap-2">
-                          <span className="text-blue-400 mt-1">•</span>
-                          {b}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Decision Table */}
-            <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
-              <h3 className="text-lg font-semibold mb-4">🎯 任務 → 工具選擇快速指南</h3>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-slate-700">
-                      <th className="text-left py-3 px-4 text-slate-400">任務</th>
-                      <th className="text-left py-3 px-4 text-slate-400">首選工具</th>
-                      <th className="text-left py-3 px-4 text-slate-400">次選工具</th>
-                      <th className="text-left py-3 px-4 text-slate-400">注意事項</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-700/50">
-                    <tr>
-                      <td className="py-3 px-4">文獻綜整</td>
-                      <td className="py-3 px-4 text-amber-400">📚 NotebookLM</td>
-                      <td className="py-3 px-4 text-purple-400">🧠 Claude</td>
-                      <td className="py-3 px-4 text-slate-400">幻覺風險最低</td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 px-4">初稿撰寫</td>
-                      <td className="py-3 px-4 text-emerald-400">🤖 ChatGPT-4</td>
-                      <td className="py-3 px-4 text-purple-400">🧠 Claude</td>
-                      <td className="py-3 px-4 text-slate-400">需大幅人工改寫</td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 px-4">語言潤飾</td>
-                      <td className="py-3 px-4 text-purple-400">🧠 Claude</td>
-                      <td className="py-3 px-4 text-emerald-400">🤖 ChatGPT-4</td>
-                      <td className="py-3 px-4 text-slate-400">完整性評分最高</td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 px-4">引用查找</td>
-                      <td className="py-3 px-4 text-rose-400 font-semibold">⚠️ 禁止使用 AI</td>
-                      <td className="py-3 px-4">-</td>
-                      <td className="py-3 px-4 text-slate-400">使用 PubMed/Scholar</td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 px-4">即時資訊</td>
-                      <td className="py-3 px-4 text-cyan-400">✨ Gemini</td>
-                      <td className="py-3 px-4">-</td>
-                      <td className="py-3 px-4 text-slate-400">可存取即時網路</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Prompts Section */}
-        {activeSection === 'prompts' && (
-          <div className="space-y-6">
-            {/* Category Tabs */}
-            <div className="flex flex-wrap gap-2">
-              {Object.entries(promptCategories).map(([key, cat]) => (
-                <button
-                  key={key}
-                  onClick={() => setActivePromptCategory(key)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-                    activePromptCategory === key
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-                  }`}
-                >
-                  {cat.icon}
-                  {cat.name}
-                </button>
-              ))}
-            </div>
-
-            {/* Prompts List */}
-            <div className="space-y-4">
-              {promptCategories[activePromptCategory].prompts.map(prompt => (
-                <div 
-                  key={prompt.id}
-                  className="bg-slate-800/50 rounded-xl border border-slate-700 overflow-hidden"
-                >
-                  <button
-                    onClick={() => toggleCard(prompt.id)}
-                    className="w-full p-4 flex items-center justify-between hover:bg-slate-700/30 transition-colors"
-                  >
-                    <div className="text-left">
-                      <h3 className="font-semibold text-lg">{prompt.title}</h3>
-                      <p className="text-sm text-slate-400 mt-1">{prompt.scenario}</p>
-                    </div>
-                    {expandedCards[prompt.id] ? (
-                      <ChevronUp className="w-5 h-5 text-slate-400" />
-                    ) : (
-                      <ChevronDown className="w-5 h-5 text-slate-400" />
-                    )}
-                  </button>
-                  
-                  {expandedCards[prompt.id] && (
-                    <div className="px-4 pb-4 space-y-4">
-                      <div className="relative">
-                        <pre className="bg-slate-900 rounded-lg p-4 text-sm text-slate-300 whitespace-pre-wrap overflow-x-auto">
-                          {prompt.prompt}
-                        </pre>
-                        <button
-                          onClick={() => copyToClipboard(prompt.prompt, prompt.id)}
-                          className="absolute top-2 right-2 p-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
-                        >
-                          {copiedPrompt === prompt.id ? (
-                            <Check className="w-4 h-4 text-emerald-400" />
-                          ) : (
-                            <Copy className="w-4 h-4" />
-                          )}
-                        </button>
-                      </div>
-                      <div className="flex items-start gap-2 text-sm bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
-                        <Sparkles className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
-                        <span className="text-blue-200"><strong>小提示：</strong>{prompt.tips}</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Ethics Section */}
-        {activeSection === 'ethics' && (
-          <div className="space-y-6">
-            {/* Core Principles */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {ethicsGuidelines.map((item, idx) => (
-                <div key={idx} className="bg-slate-800/50 rounded-xl p-5 border border-slate-700">
-                  <div className="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center text-blue-400 mb-4">
-                    {item.icon}
-                  </div>
-                  <h3 className="font-semibold mb-2">{item.title}</h3>
-                  <p className="text-sm text-slate-400">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* Journal Policies */}
-            <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
-              <h3 className="text-lg font-semibold mb-4">📋 主要期刊 AI 政策比較</h3>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-slate-700">
-                      <th className="text-left py-3 px-4 text-slate-400">期刊</th>
-                      <th className="text-center py-3 px-4 text-slate-400">AI 作者</th>
-                      <th className="text-center py-3 px-4 text-slate-400">需揭露</th>
-                      <th className="text-center py-3 px-4 text-slate-400">AI 圖像</th>
-                      <th className="text-center py-3 px-4 text-slate-400">同儕審查</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-700/50">
-                    {[
-                      { name: 'NEJM', author: '禁止', disclose: '是', image: '個案審核', review: '限制' },
-                      { name: 'JAMA', author: '禁止', disclose: '是', image: '有限', review: '禁止' },
-                      { name: 'Lancet', author: '禁止', disclose: '是', image: '個案審核', review: '禁止' },
-                      { name: 'Nature', author: '禁止', disclose: '是', image: '多數禁止', review: '禁止' },
-                      { name: 'JCO', author: '禁止', disclose: '是', image: '依 ICMJE', review: '禁止' },
-                    ].map((journal, idx) => (
-                      <tr key={idx}>
-                        <td className="py-3 px-4 font-medium">{journal.name}</td>
-                        <td className="py-3 px-4 text-center text-rose-400">{journal.author}</td>
-                        <td className="py-3 px-4 text-center text-emerald-400">{journal.disclose}</td>
-                        <td className="py-3 px-4 text-center text-amber-400">{journal.image}</td>
-                        <td className="py-3 px-4 text-center text-rose-400">{journal.review}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Disclosure Template */}
-            <div className="bg-gradient-to-br from-blue-900/30 to-purple-900/30 rounded-2xl p-6 border border-blue-500/30">
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <FileText className="w-5 h-5 text-blue-400" />
-                AI 使用揭露聲明範本
-              </h3>
-              <div className="relative bg-slate-900/50 rounded-lg p-4">
-                <p className="text-slate-300 text-sm leading-relaxed">
-                  "The authors used <span className="text-blue-400">[tool name, version]</span> to assist with <span className="text-blue-400">[specific tasks, e.g., language editing, grammar checking]</span>. All AI-generated content was reviewed and verified by the authors, who take full responsibility for the accuracy of the final manuscript."
-                </p>
-                <button
-                  onClick={() => copyToClipboard('The authors used [tool name, version] to assist with [specific tasks, e.g., language editing, grammar checking]. All AI-generated content was reviewed and verified by the authors, who take full responsibility for the accuracy of the final manuscript.', 'disclosure')}
-                  className="absolute top-2 right-2 p-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
-                >
-                  {copiedPrompt === 'disclosure' ? (
-                    <Check className="w-4 h-4 text-emerald-400" />
-                  ) : (
-                    <Copy className="w-4 h-4" />
-                  )}
-                </button>
-              </div>
-              <p className="text-sm text-slate-500 mt-3">
-                * 揭露位置：寫作協助 → 致謝；資料分析/圖表產生 → 方法
-              </p>
-            </div>
-
-            {/* Verification Checklist */}
-            <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-emerald-400" />
-                AI 生成內容驗證檢查表
-              </h3>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="font-medium text-amber-400 mb-3">引用驗證（必做）</h4>
-                  <ul className="space-y-2 text-sm text-slate-300">
-                    <li className="flex items-start gap-2">
-                      <span className="text-slate-500">□</span>
-                      Google Scholar 以引號搜尋完整標題
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-slate-500">□</span>
-                      doi.org 驗證 DOI 連結至正確論文
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-slate-500">□</span>
-                      PubMed 核對作者發表清單
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-slate-500">□</span>
-                      交叉核對期刊卷期與頁碼
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-slate-500">□</span>
-                      存取實際論文確認內容符合宣稱
-                    </li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-medium text-amber-400 mb-3">內容驗證</h4>
-                  <ul className="space-y-2 text-sm text-slate-300">
-                    <li className="flex items-start gap-2">
-                      <span className="text-slate-500">□</span>
-                      對照原始來源查核統計數據
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-slate-500">□</span>
-                      以權威來源驗證藥物名稱、劑量
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-slate-500">□</span>
-                      以現行版本確認指引建議
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-slate-500">□</span>
-                      以 clinicaltrials.gov 核對試驗結果
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-slate-500">□</span>
-                      通過抄襲偵測軟體檢查
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-slate-800/30 border-t border-slate-700 mt-12">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-500">
-            <div>
-              參考指引：ICMJE 2024 | COPE 2024 | STROBE | CONSORT 2025 | CARE
-            </div>
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-amber-500" />
-              所有 AI 生成內容需人工驗證，作者負全部責任
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-};
-
-export default MedicalWritingAIGuide;
+        // Render the app
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<MedicalWritingAIGuide />);
+    </script>
+</body>
+</html>
